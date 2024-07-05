@@ -1,35 +1,47 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState } from "react";
+import Autocomplete from "./components/autocomplete";
 
 function App() {
-  const [count, setCount] = useState(0)
 
+  const fetchSuggetions = async (query) => {
+    const data = await fetch(`https://dummyjson.com/recipes/search?q=${query}`);
+    if (!data.ok) {
+      throw new Error('Status was not ok');
+    }
+    const json = await data.json();
+      return json.recipes
+  };
   return (
     <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <h1 style={{ textAlign: "center" }}>Auto Complete / Type Ahead</h1>
+      <Autocomplete
+        fetchSuggetions={fetchSuggetions}
+        placeholder={"Enter Recipe..."}
+        staticData={""}
+        dataKey={"name"}
+        customLoading={<>Loading Recipes ....</>}
+        customStyle={{
+          width: "30%",
+          padding: "12px 20px",
+          margin: "8px 15px",
+          display: "inline-block",
+          border: "1px solid #ccc",
+          borderRadius: "4px",
+          boxSizing: "border-box",
+          fontSize: "16px",
+          color: "#333",
+          backgroundColor: "#f9f9f9",
+          transition: "border-color 0.3s, box-shadow 0.3s",
+        }}
+        onSelect={(res) => {
+          console.log(res);
+        }}
+        onChange={(input) => {}}
+        onBlur={(e) => {}}
+        onFocus={(e) => {}}
+      />
     </>
-  )
+  );
 }
 
-export default App
+export default App;
